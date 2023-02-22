@@ -18,3 +18,5 @@ functions:
     handler: first.hello
   second:
     handler: second.hello
+  hello:
+    handler: src/hello.handler
