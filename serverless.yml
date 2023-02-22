@@ -8,6 +8,7 @@ frameworkVersion: '3'
 plugins:
   - serverless-webpack
   - serverless-api-gateway-throttling
+  - serverless-iam-roles-per-function
 
 custom:
   apiGatewayThrottling:
@@ -30,6 +31,17 @@ functions:
       - httpApi:
           method: get
           path: /hello
+  taskPost:
+    handler: src/taskhandler.post
+    events:
+      - httpApi:
+          method: post
+          path: /tasks
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: 'arn:aws:dynamodb:*:*:table/tasks'
 
 resources:
   Resources:
