@@ -9,11 +9,17 @@ plugins:
   - serverless-webpack
   - serverless-api-gateway-throttling
   - serverless-iam-roles-per-function
+  - serverless-s3-sync
 
 custom:
   apiGatewayThrottling:
     maxRequestsPerSecond: 10
     maxConcurrentRequests: 5
+  bucketName: udemy-aws-lambda-418581597558
+  s3Sync:
+    buckets:
+      - bucketName: ${self:custom.bucketName}
+        localDir: static
 
 provider:
   name: aws
@@ -70,3 +76,24 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+    StaticSiteS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+    StaticSiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: StaticSiteS3Bucket
+        PolicyDocument: 
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: '*'
+              Action:
+                - s3:GetObject
+              Resource:
+                'arn:aws:s3:::${self:custom.bucketName}/*'
