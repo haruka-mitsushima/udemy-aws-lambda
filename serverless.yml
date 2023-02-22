@@ -31,6 +31,18 @@ functions:
       - httpApi:
           method: get
           path: /hello
+  taskList:
+    handler: src/taskhandler.list
+    events:
+      - httpApi:
+          method: get
+          path: /tasks
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: 'arn:aws:dynamodb:*:*:table/tasks'
+          
   taskPost:
     handler: src/taskhandler.post
     events:
