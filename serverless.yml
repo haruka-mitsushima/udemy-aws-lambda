@@ -7,6 +7,12 @@ frameworkVersion: '3'
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-api-gateway-throttling
+
+custom:
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 10
+    maxConcurrentRequests: 5
 
 provider:
   name: aws
@@ -20,3 +26,7 @@ functions:
     handler: second.hello
   hello:
     handler: src/hello.handler
+    events:
+      - httpApi:
+          method: get
+          path: /hello
