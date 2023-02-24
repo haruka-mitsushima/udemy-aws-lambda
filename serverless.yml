@@ -51,7 +51,7 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:Scan
+          - dynamodb:GetItem
         Resource: 'arn:aws:dynamodb:*:*:table/tasks'
   taskList:
     handler: src/taskhandler.list
