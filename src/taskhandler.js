@@ -1,6 +1,23 @@
 import { DynamoDB } from 'aws-sdk'
 import crypto from 'crypto'
 
+export async function deleteTaskById(event, context) {
+    const id = event.queryStringParameters.itemId
+    
+    const dynamodb = new DynamoDB({
+        region: 'ap-northeast-1'
+    })
+    
+    const result = await dynamodb.deleteItem({
+        TableName: 'tasks',
+        Key: {
+            'id': {S: id}
+        },
+    }).promise()
+    
+    return { message: `id: ${id} id deleted`}
+}
+
 export async function getTaskById(event, context) {
     const id = event.queryStringParameters.itemId
     const dynamodb = new DynamoDB({
