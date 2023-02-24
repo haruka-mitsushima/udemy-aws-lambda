@@ -6,7 +6,15 @@ export async function getTaskById(event, context) {
     const dynamodb = new DynamoDB({
         region: 'ap-northeast-1'
     })
-    return {message: `Hello, ${id}`}
+    
+    const result = await dynamodb.getItem({
+        TableName: 'tasks',
+        Key: {
+            'id': {S: id}
+        },
+    }).promise()
+    
+    return result
 }
 
 export async function list(event, context) {
