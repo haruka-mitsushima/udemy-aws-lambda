@@ -1,6 +1,14 @@
 import { DynamoDB } from 'aws-sdk'
 import crypto from 'crypto'
 
+export async function getTaskById(event, context) {
+    const id = event.queryStringParameters.itemId
+    const dynamodb = new DynamoDB({
+        region: 'ap-northeast-1'
+    })
+    return {message: `Hello, ${id}`}
+}
+
 export async function list(event, context) {
     const dynamodb = new DynamoDB({
         region: 'ap-northeast-1'
