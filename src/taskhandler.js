@@ -1,6 +1,33 @@
 import { DynamoDB } from 'aws-sdk'
 import crypto from 'crypto'
 
+export async function updateTaskById(event, context) {
+    const id = event.queryStringParameters.itemId
+    const requestBody = JSON.parse(event.body)
+    const dynamodb = new DynamoDB({
+        region: 'ap-northeast-1'
+    })
+    
+    const result = await dynamodb.updateItem({
+        TableName: 'tasks',
+        Key: {
+            'id': {S: id}
+        },
+        ExpressionAttributeNames: {
+           "#AT": "title"
+          }, 
+        ExpressionAttributeValues: {
+            ":t": {
+                S: requestBody.title
+            }
+        }, 
+        UpdateExpression: "SET #AT = :t",
+        ReturnValues: 'ALL_NEW'
+    }).promise()
+    
+    return result
+}
+
 export async function deleteTaskById(event, context) {
     const id = event.queryStringParameters.itemId
     
@@ -31,7 +58,7 @@ export async function getTaskById(event, context) {
         },
     }).promise()
     
-    return result
+    return result.Item
 }
 
 export async function list(event, context) {

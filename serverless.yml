@@ -29,7 +29,7 @@ provider:
     cors:
       allowedOrigins:
         - 'http://${self:custom.bucketName}.s3-website-ap-northeast-1.amazonaws.com'
-
+        - 'http://localhost:3000'
 
 functions:
   first:
@@ -42,6 +42,17 @@ functions:
       - httpApi:
           method: get
           path: /hello
+  updateTaskById:
+    handler: src/taskhandler.updateTaskById
+    events:
+      - httpApi:
+          method: patch
+          path: /updateTaskById
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: 'arn:aws:dynamodb:*:*:table/tasks'
   deleteTaskById:
     handler: src/taskhandler.deleteTaskById
     events:
