@@ -42,6 +42,17 @@ functions:
       - httpApi:
           method: get
           path: /hello
+  deleteTaskById:
+    handler: src/taskhandler.deleteTaskById
+    events:
+      - httpApi:
+          method: delete
+          path: /deleteTaskById
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: 'arn:aws:dynamodb:*:*:table/tasks'
   getTaskById:
     handler: src/taskhandler.getTaskById
     events:
