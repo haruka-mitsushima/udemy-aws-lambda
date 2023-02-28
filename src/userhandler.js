@@ -15,5 +15,5 @@ export async function getUserCart(event, context) {
         },
     }).promise()
     
-    return result.Item
+    return result.Item.userCarts
 }
