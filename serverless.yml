@@ -42,6 +42,18 @@ functions:
       - httpApi:
           method: get
           path: /hello
+  addCart:
+    handler: src/userhandler.addCart
+    events:
+      - httpApi:
+          method: post
+          path: /addCart
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+        Resource: 'arn:aws:dynamodb:*:*:table/users'
   getUserCart:
     handler: src/userhandler.getUserCart
     events:
