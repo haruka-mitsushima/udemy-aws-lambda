@@ -20,18 +20,18 @@ export async function getUserCart(event, context) {
 
 export async function addCart(event, context) {
     const id = event.queryStringParameters.userId
-    // const  documentCliant = new DynamoDB.DocumentClient({
-    //     apiVersion: '2012-08-10',
-    //     region: 'ap-northeast-1'
-    // })
-    const dynamodb = new DynamoDB({
+    const  documentClient = new DynamoDB.DocumentClient({
+        apiVersion: '2012-08-10',
         region: 'ap-northeast-1'
     })
+    // const dynamodb = new DynamoDB({
+    //     region: 'ap-northeast-1'
+    // })
     
-    const user = await dynamodb.getItem({
+    const user = await documentClient.get({
         TableName: 'users',
         Key: {
-            'id': {S: id}
+            'id': id
         },
     }).promise()
     
@@ -46,20 +46,18 @@ export async function addCart(event, context) {
       "itemId": "5"
     }
     
-    // const newCart = currentCart.push(newItem)
+    currentCart.push(newItem)
     
-    const result = await dynamodb.updateItem({
+    const result = await documentClient.update({
         TableName: 'users',
         Key: {
-            'id': {S: id}
+            'id': id
         },
         ExpressionAttributeNames: {
-           "#AT": "userName"
+           "#AT": "userCarts"
           }, 
         ExpressionAttributeValues: {
-            ":t": {
-                S: 'ギョベビャボ'
-            }
+            ":t": currentCart
         }, 
         UpdateExpression: "SET #AT = :t",
         ReturnValues: 'ALL_NEW'
